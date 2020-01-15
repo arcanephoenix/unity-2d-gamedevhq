@@ -8,11 +8,8 @@ public class Powerup : MonoBehaviour
     private float speed = 3;
     [SerializeField]
     private int powerupID;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField]
+    private AudioClip pickupClip;
 
     // Update is called once per frame
     void Update()
@@ -43,9 +40,10 @@ public class Powerup : MonoBehaviour
                         Debug.LogError("what kind of powerup is this wtf");
                         break;
                 }
+                AudioSource.PlayClipAtPoint(pickupClip, transform.position);
             }
 
-            Destroy(gameObject);
+            Destroy(gameObject,1);
         }
     }
 }

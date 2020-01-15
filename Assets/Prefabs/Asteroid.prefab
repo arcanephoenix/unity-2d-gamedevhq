@@ -135,3 +135,4 @@ MonoBehaviour:
   rotateSpeed: 3
   explosionPrefab: {fileID: 4393690313107050127, guid: cdd9ffa2a7b59584d9ef3c7516fa679a,
     type: 3}
+  explosionClip: {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}

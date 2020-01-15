@@ -8,9 +8,15 @@ public class Enemy : MonoBehaviour
     private float speed = 4f;
     private Animator animator;
     private Player playa;
+    private AudioSource audioSource;
+    private Rigidbody2D rigidbody2D;
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null) Debug.LogError("no audiosource");
+        rigidbody2D = GetComponent<Rigidbody2D>();
+        if (rigidbody2D == null) Debug.LogError("no rigidbody");
         playa = GameObject.Find("Player").GetComponent<Player>();
         if (playa == null) Debug.LogError("NO PLAYER FOUND REEE");
         animator = gameObject.GetComponent<Animator>();
@@ -35,15 +41,19 @@ public class Enemy : MonoBehaviour
         {
             if (playa != null) playa.Damage();
             speed = 0;
+            //rigidbody2D.dete
             animator.SetTrigger("OnEnemyDead");
+            audioSource.Play();
             Destroy(gameObject,2.5f);
         }
         else if(other.tag == "Laser")
         {
             if (playa != null) playa.UpdateScore(10);
             Destroy(other.gameObject);
+            //Destroy(rigidbody2D);
             speed = 0;
             animator.SetTrigger("OnEnemyDead");
+            audioSource.Play();
             Destroy(gameObject,2.5f);
         }
     }

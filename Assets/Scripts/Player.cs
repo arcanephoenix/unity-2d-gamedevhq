@@ -25,21 +25,34 @@ public class Player : MonoBehaviour
     private GameObject shield;
     [SerializeField]
     private GameObject canvas;
+    [SerializeField]
+    private AudioClip playerExplosion;
+    [SerializeField]
+    private AudioClip laserShot;
 
+    private AudioSource audioSource;
     private int score;
     private SpawnManager spawnManager;
     private bool isTripleShot = false;
     private bool isSpeed = false;
     private bool isShield = false;
     private UIManager uiManager;
+    private GameObject rightWing;
+    private GameObject leftWing;
     
     
 
     // Start is called before the first frame update
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null) Debug.LogError("no audiosource");
         score = 0;
         spawnManager = GameObject.Find("SpawnManager").GetComponent<SpawnManager>();
+        rightWing = GameObject.Find("RightFire");
+        leftWing = GameObject.Find("LeftFire");
+        rightWing.SetActive(false);
+        leftWing.SetActive(false);
         uiManager = canvas.GetComponent<UIManager>();
         shield.SetActive(isShield);
         if (spawnManager == null) Debug.LogError("SpawnManager is null");
@@ -81,17 +94,17 @@ public class Player : MonoBehaviour
 
     void FireLaser()
     {
-        {
-            nextFire = Time.time + fireRate;
-            if (isTripleShot)
-            {
-                Instantiate(tripleShotPrefab, transform.position + new Vector3(0f, laserOffset), Quaternion.identity);
-            }
-            else
-            {
-                Instantiate(laserPrefab, transform.position, Quaternion.identity);
-            }
-        }
+       nextFire = Time.time + fireRate;
+       if (isTripleShot)
+       {
+           Instantiate(tripleShotPrefab, transform.position + new Vector3(0f, laserOffset), Quaternion.identity);
+       }
+       else
+       {
+           Instantiate(laserPrefab, transform.position, Quaternion.identity);
+       }
+        audioSource.clip = laserShot;
+        audioSource.Play();
     }
 
     public void Damage()
@@ -103,9 +116,13 @@ public class Player : MonoBehaviour
             return;
         }
         lives--;
+        if (lives == 2) rightWing.SetActive(true);
+        else if (lives == 1) leftWing.SetActive(true);
         uiManager.SetLivesSprite(lives);
         if (lives < 1)
         {
+            audioSource.clip = playerExplosion;
+            audioSource.Play();
             spawnManager.Dead();
             uiManager.SetGameOver();
             Destroy(this.gameObject);

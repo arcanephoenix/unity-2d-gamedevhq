@@ -12,19 +12,15 @@ public class SpawnManager : MonoBehaviour
     private Transform[] powerupPrefab;
     private bool isAlive = true;
     // Start is called before the first frame update
-    void Start()
+
+    public void StartSpawn()
     {
         StartCoroutine(SpawnEnemyCoroutine());
         StartCoroutine(SpawnPowerupCoroutine());
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     IEnumerator SpawnEnemyCoroutine()
     {
+        yield return new WaitForSeconds(3);
         while(isAlive)
         {
             Transform newEnemy = Instantiate(enemyPrefab, new Vector3(Random.Range(-10, 10), 9), Quaternion.identity);
@@ -35,6 +31,7 @@ public class SpawnManager : MonoBehaviour
 
     IEnumerator SpawnPowerupCoroutine()
     {
+        yield return new WaitForSeconds(3);
         while (isAlive)
         {
             int randomPowerup = Random.Range(0, powerupPrefab.Length);
