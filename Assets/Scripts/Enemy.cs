@@ -6,21 +6,33 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField]
     private float speed = 4f;
+    [SerializeField]
+    private GameObject laserPrefab;
     private Animator animator;
     private Player playa;
     private AudioSource audioSource;
-    private Rigidbody2D rigidbody2D;
     // Start is called before the first frame update
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null) Debug.LogError("no audiosource");
-        rigidbody2D = GetComponent<Rigidbody2D>();
-        if (rigidbody2D == null) Debug.LogError("no rigidbody");
         playa = GameObject.Find("Player").GetComponent<Player>();
         if (playa == null) Debug.LogError("NO PLAYER FOUND REEE");
         animator = gameObject.GetComponent<Animator>();
         if (animator == null) Debug.LogError("NO ANIMATOR REEE");
+        StartCoroutine(EnemyShooting());
+    }
+
+    IEnumerator EnemyShooting()
+    {
+        while(true)
+        {
+            Instantiate(laserPrefab, transform.position + new Vector3(-0.24f,-1.68f), Quaternion.identity);
+            Instantiate(laserPrefab, transform.position + new Vector3(0.24f, -1.68f), Quaternion.identity);
+            yield return new WaitForSeconds(Random.Range(3, 7));
+        }
+        
+
     }
 
     // Update is called once per frame
@@ -44,16 +56,18 @@ public class Enemy : MonoBehaviour
             //rigidbody2D.dete
             animator.SetTrigger("OnEnemyDead");
             audioSource.Play();
+            Destroy(GetComponent<Collider2D>());
             Destroy(gameObject,2.5f);
         }
         else if(other.tag == "Laser")
         {
             if (playa != null) playa.UpdateScore(10);
             Destroy(other.gameObject);
-            //Destroy(rigidbody2D);
+            
             speed = 0;
             animator.SetTrigger("OnEnemyDead");
             audioSource.Play();
+            Destroy(GetComponent<Collider2D>());
             Destroy(gameObject,2.5f);
         }
     }

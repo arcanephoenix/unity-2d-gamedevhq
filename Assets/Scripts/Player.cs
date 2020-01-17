@@ -107,6 +107,15 @@ public class Player : MonoBehaviour
         audioSource.Play();
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.tag == "EnemyLaser")
+        {
+            Destroy(collision.gameObject);
+            Damage();
+        }
+    }
+
     public void Damage()
     {
         if(isShield)
